@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# OEM IT Onboarding Quick Setup Script
+# v1.1 - 09-07-2025
+# 
+# Authors:
+# - Jack Greenberg - 09-24-2022
+# - Henry Tejada Deras - 09-07-2025
+
 set -u
 
 # Colors
@@ -31,28 +38,56 @@ confirm_and_run() {
 }
 
 main () {
-  printf "\n${bold}Welcome to the Formula quick setup!${cl}\n"
-  printf "You should be running this in your Formula folder, i.e. /home/${USER}/Documents/Formula/\n"
+  printf "\n${bold}Welcome to the OEM quick setup!${cl}\n"
+  printf "\n${bold}v1.1 - 09-07-2025\n"
+  # TODO: Add VSCode Studio Code, Bazel, Python, Conda, Setup Virtual Environment, KiCad Defaults
 
+  #######
+  # Initialization #
+  #######
+  printf "\n"
+  printf "${green}${bold}Various Background Tasks...${cl}\n"
+  sudo apt-get update # Update Package List
+  # Directory with Temp files: ~/Downloads/oem-quick-setup-temp
+  mkdir -p ~/Downloads/oem-quick-setup-temp
+  cd ~/Downloads/oem-quick-setup-temp
+  # Install Python and pip, miniconda and other python libraries
+  confirm_and_run "sudo apt install python3 python3-pip python3-distutils"
+  confirm_and_run "curl -L https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh > ~/Downloads/oem-quick-setup-temp/miniconda.sh && \
+  chmod -v +x ~/Downloads/oem-quick-setup-temp/miniconda.sh && \
+  cd ~/Downloads/oem-quick-setup-temp && \
+  ./miniconda.sh"
+  cd ~/Downloads/oem-quick-setup-temp
+  confirm_and_run "pip3 install cantools && \
+  sudo apt install can-utils"
 
   #######
   # GIT #
   #######
+  # https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
   printf "\n"
-  printf "${green}${bold}Installing Git...${cl}\n"
-  confirm_and_run "sudo apt update && sudo apt install git"
+  printf "${green}${bold}Installing Git (latest stable version)...${cl}\n"
+  confirm_and_run "sudo apt install git-all"
   eval "git --version"
-  confirm_and_run "sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0 && \
-    sudo apt-add-repository https://cli.github.com/packages \
-    sudo apt update \
-    sudo apt install gh"
 
   #########
   # KICAD #
   #########
+  # https://www.kicad.org/download/linux/
   printf "\n"
-  printf "${green}${bold}Installing KiCad...${cl}\n"
-  confirm_and_run "sudo add-apt-repository --yes ppa:kicad/kicad-5.1-releases && sudo apt update && sudo apt install --install-recommends kicad"
+  printf "${green}${bold}Installing KiCad (latest stable version)...${cl}\n"
+  confirm_and_run "sudo add-apt-repository ppa:kicad/kicad-9.0-releases && \
+  sudo apt update && \
+  sudo apt install kicad"
+
+  ###########
+  # VS CODE #
+  ###########
+  # https://code.visualstudio.com/docs/setup/linux; https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64
+  printf "\n"
+  printf "${green}${bold}Installing VS Code (latest stable version)...${cl}\n"
+  confirm_and_run "curl -L https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64 > ~/Downloads/oem-quick-setup-temp/vscode.deb && \
+  sudo apt install ~/Downloads/oem-quick-setup-temp/vscode.deb"
 
   #############
   # TOOLCHAIN #
@@ -65,8 +100,9 @@ main () {
   # ZOOM #
   ########
   printf "\n"
-  printf "\n${green}${bold}Installing Zooooooooooom...${cl}\n"
-  confirm_and_run "curl -L https://zoom.us/client/latest/zoom_amd64.deb > ~/Downloads/zoom_amd64.deb && sudo dpkg -i ~/Downloads/zoom_amd64.deb"
+  printf "\n${green}${bold}Installing Zoom...${cl}\n"
+  confirm_and_run "curl -L https://zoom.us/client/latest/zoom_amd64.deb > ~/Downloads/oem-quick-setup-temp/zoom_amd64.deb && \
+  sudo dpkg -i ~/Downloads/oem-quick-setup-temp/zoom_amd64.deb"
 
 # FINAL MESSAGE
 cat << EOF
