@@ -38,16 +38,17 @@ confirm_and_run() {
 }
 
 main () {
-  printf "\n${bold}Welcome to the OEM quick setup!${cl}\n"
-  printf "\n${bold}v1.1 - 09-07-2025\n"
-  # TODO: Add VSCode Studio Code, Bazel, Python, Conda, Setup Virtual Environment, KiCad Defaults
+  printf "\n${bold}Welcome to the OEM quick setup!${cl}"
+  printf "\n${bold}v1.1 - 09-07-2025"
+  # TODO: Bazel, Setup Virtual Environment, KiCad Defaults
 
-  #######
+  ##################
   # Initialization #
-  #######
+  ##################
   printf "\n"
   printf "${green}${bold}Various Background Tasks...${cl}\n"
   sudo apt-get update # Update Package List
+  sudo apt install curl # Install curl if not already installed
   # Directory with Temp files: ~/Downloads/oem-quick-setup-temp
   mkdir -p ~/Downloads/oem-quick-setup-temp
   cd ~/Downloads/oem-quick-setup-temp
@@ -60,6 +61,7 @@ main () {
   cd ~/Downloads/oem-quick-setup-temp
   confirm_and_run "pip3 install cantools && \
   sudo apt install can-utils"
+  sudo apt-get update # Update Package List
 
   #######
   # GIT #
