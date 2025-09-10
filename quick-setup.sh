@@ -48,17 +48,36 @@ main () {
   printf "\n"
   printf "${green}${bold}Various Background Tasks...${cl}\n"
   sudo apt-get update # Update Package List
-  sudo apt install curl # Install curl if not already installed
+
+
+  # Install curl if not already installed
+  if command -v curl &> /dev/null; then
+      echo "cURL is installed. Skipping installation of cURL."
+  else
+      sudo apt install curl
+  fi
+  
   # Directory with Temp files: ~/Downloads/oem-quick-setup-temp
   mkdir -p ~/Downloads/oem-quick-setup-temp
   cd ~/Downloads/oem-quick-setup-temp
+
   # Install Python and pip, miniconda and other python libraries
-  confirm_and_run "sudo apt install python3 python3-pip python3-distutils"
+  # confirm_and_run "sudo apt install python3 python3-pip python3-distutils"
   confirm_and_run "curl -L https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh > ~/Downloads/oem-quick-setup-temp/miniconda.sh && \
   chmod -v +x ~/Downloads/oem-quick-setup-temp/miniconda.sh && \
   cd ~/Downloads/oem-quick-setup-temp && \
   ./miniconda.sh"
   cd ~/Downloads/oem-quick-setup-temp
+  conda create -n oem python=3.10 -y
+  # eval "$(/home/$USER/miniconda3/bin/conda shell.bash hook)"
+  confirm_and_run "conda activate oem"
+
+  # TODO: Create OEM conda environment with all necessary packages for OEM work
+  printf "\n${green}${bold}Installing Python packages for OEM work...${cl}"
+  # Change so packages are installed in OEM environment in conda
+
+  # Install non-python packages for OEM work
+  printf "\n${green}${bold}Installing non-Python packages for OEM work...${cl}"
   confirm_and_run "pip3 install cantools && \
   sudo apt install can-utils"
   sudo apt-get update # Update Package List
