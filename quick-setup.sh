@@ -6,7 +6,11 @@
 # Authors:
 # - Jack Greenberg - 09-24-2022
 # - Henry Tejada Deras - 09-07-2025
+#
+# Assumptions:
+# - Ubuntu 24.04.3 LTS or later
 
+# Declarations
 set -u
 
 # Colors
@@ -68,6 +72,8 @@ main () {
   cd ~/Downloads/oem-quick-setup-temp && \
   ./miniconda.sh"
   cd ~/Downloads/oem-quick-setup-temp
+  printf "\n${green}${bold}Creating Conda oem environment...${cl}"
+
   conda create -n oem python=3.10 -y
   # eval "$(/home/$USER/miniconda3/bin/conda shell.bash hook)"
   confirm_and_run "conda activate oem"
@@ -92,6 +98,10 @@ main () {
   eval "git --version"
 
   #########
+  # Bazel #
+  #########
+
+  #########
   # KICAD #
   #########
   # https://www.kicad.org/download/linux/
@@ -104,17 +114,16 @@ main () {
   ###########
   # VS CODE #
   ###########
-  # https://code.visualstudio.com/docs/setup/linux; https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64
+  # Installed using Ubuntu's snap package manager
   printf "\n"
   printf "${green}${bold}Installing VS Code (latest stable version)...${cl}\n"
-  confirm_and_run "curl -L https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64 > ~/Downloads/oem-quick-setup-temp/vscode.deb && \
-  sudo apt install ~/Downloads/oem-quick-setup-temp/vscode.deb"
+  confirm_and_run "sudo snap install --classic code"
 
-  #############
-  # TOOLCHAIN #
-  #############
+  ################################
+  # TOOLCHAIN - ATmega 16M1/64M1 #
+  ################################
   printf "\n"
-  printf "\n${green}${bold}Installing buildchain...${cl}\n"
+  printf "\n${green}${bold}Installing buildchain (for ATmega 16M1/64M1)...${cl}\n"
   confirm_and_run "sudo apt-get install build-essential manpages-dev gcc avr-gcc avrdude"
 
   ########
