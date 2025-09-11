@@ -48,14 +48,20 @@ main () {
   printf "\n${bold}v1.1 - 09-07-2025"
   # TODO: Bazel, Setup Virtual Environment, KiCad Defaults
 
+  # Get Script File Directory
+  SCRIPT_PATH=$(readlink -f "$0")
+  printf "\nScript Location: ${blue}${bold}$SCRIPT_PATH${cl}\n"
+
   ##################
   # Initialization #
   ##################
-  read -p "Are you sure you ready to proceed? (Y/n): " response
+  printf "\n"
+  read -p "\nAre you sure you ready to proceed? (Y/n): " response
   if [[ "$response" == [yY] ]]; then
       echo "Proceeding..."
   else
       echo "Setup canceled."
+      exit
   fi
 
   # Update Package List
@@ -106,7 +112,7 @@ main () {
 
         printf "\n${green}${bold}Restarting Shell to Apply Changes...${cl}\n"
         echo "Step 2" > "$STATE_FILE"  # Save the next state
-        exec $SHELL  # Restart the shell
+        exec $SHELL $SCRIPT_PATH # Restart the shell and restart script
         ;;
     "Step 2")
         # Create OEM Conda Environment
@@ -122,7 +128,7 @@ main () {
 
         printf "\n${green}${bold}Restarting Shell to Apply Changes...${cl}\n"
         echo "Restarts Done" > "$STATE_FILE"  # Save the next state
-        exec $SHELL  # Restart the shell
+        exec $SHELL $SCRIPT_PATH # Restart the shell and restart script
         ;;
     "Restarts Done")
         # Install Python packages for OEM work
