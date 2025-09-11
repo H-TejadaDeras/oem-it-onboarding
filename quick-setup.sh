@@ -51,8 +51,8 @@ main () {
   ##################
   # Initialization #
   ##################
-  read -p "Are you sure you ready to proceed? (yes/no): " response
-  if [[ "$response" == [yY][eE][sS]|[yY] ]]; then
+  read -p "Are you sure you ready to proceed? (Y/n): " response
+  if [[ "$response" == [yY]]]; then
       echo "Proceeding..."
   else
       echo "Setup canceled."
