@@ -56,12 +56,12 @@ main () {
   # Initialization #
   ##################
   printf "\n"
-  read -p "\nAre you sure you ready to proceed? (Y/n): " response
+  read -p "Are you sure you ready to proceed? (Y/n): " response
   if [[ "$response" == [yY] ]]; then
       echo "Proceeding..."
   else
       echo "Setup canceled."
-      exit
+      exit 0
   fi
 
   # Update Package List
@@ -110,9 +110,11 @@ main () {
         cd $TMP_DIR && \
         ./miniconda.sh"
 
-        printf "\n${green}${bold}Restarting Shell to Apply Changes...${cl}\n"
+        # printf "\n${green}${bold}Restarting Shell to Apply Changes...${cl}\n"
         echo "Step 2" > "$STATE_FILE"  # Save the next state
-        exec $SHELL $SCRIPT_PATH # Restart the shell and restart script
+        printf "\n${green}${bold}Please restart your shell to apply changes and then re-run the script.${cl}\n"
+        exit 0
+        # exec $SHELL $SCRIPT_PATH # Restart the shell and restart script
         ;;
     "Step 2")
         # Create OEM Conda Environment
