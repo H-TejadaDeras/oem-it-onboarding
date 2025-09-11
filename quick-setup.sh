@@ -97,6 +97,7 @@ main () {
   case "$STATE" in
     "Start")
         # Install cURL if not already installed
+        printf "\n${green}${bold}Checking for cURL...${cl}\n"
           if command -v curl &> /dev/null; then
               echo "cURL is installed. Skipping installation of cURL."
           else
@@ -117,10 +118,28 @@ main () {
         # exec $SHELL $SCRIPT_PATH # Restart the shell and restart script
         ;;
     "Step 2")
+        # Accept Conda TOS
+        printf "\n${green}${bold}Accepting Conda TOS...${cl}\n"
+        printf "Anaconda Terms of Service: https://www.anaconda.com/legal/terms/terms-of-service\n"
+        printf "Anaconda Privacy Policy: https://www.anaconda.com/legal/privacy-policy\n"
+        printf "You must accept the Terms of Service to proceed. By inputting "y", you are accepting the terms of service.\n"
+        printf "\n"
+        read -p "Do you accept Anaconda's Terms of Service? (Y/n): " response
+        if [[ "$response" == [yY] ]]; then
+            echo "You accepted Anaconda's Terms of Service. Continuing setup."
+            conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
+            conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
+        elif [[ "$response" == [nN] ]]; then
+            echo "You did not accept the Terms of Service. Exiting setup."
+            exit 0
+        else
+            echo "Invalid input. Exiting setup."
+            exit 0
+        fi
+
         # Create OEM Conda Environment
         printf "\n${green}${bold}Creating OEM Conda Environment...${cl}\n"
         confirm_and_run "conda create -n oem python=3.10 -y"
-        confirm_and_run "conda activate oem"
 
         # Setting OEM Conda Environment to Auto-Activate on Shell Start
         printf "\n${green}${bold}Setting OEM Conda Environment to Auto-Activate on Shell Start...${cl}\n"
@@ -128,9 +147,11 @@ main () {
         echo "conda activate oem" >> ~/.bashrc
         source ~/.bashrc
 
-        printf "\n${green}${bold}Restarting Shell to Apply Changes...${cl}\n"
+        # printf "\n${green}${bold}Restarting Shell to Apply Changes...${cl}\n"
         echo "Restarts Done" > "$STATE_FILE"  # Save the next state
-        exec $SHELL $SCRIPT_PATH # Restart the shell and restart script
+        printf "\n${green}${bold}Please restart your shell to apply changes and then re-run the script.${cl}\n"
+        exit 0
+        # exec $SHELL $SCRIPT_PATH # Restart the shell and restart script
         ;;
     "Restarts Done")
         # Install Python packages for OEM work
