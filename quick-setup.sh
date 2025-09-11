@@ -1,16 +1,17 @@
 #!/bin/bash
 
 # OEM IT Onboarding Quick Setup Script
-# v1.1 - 09-07-2025
+# v1.1 - 09-12-2025
 # 
 # Authors:
 # - Jack Greenberg - 09-24-2022
 # - Henry Tejada Deras - 09-07-2025
+# - Microsoft Copilot + GitHub Copilot
 #
 # Assumptions:
 # - Ubuntu 24.04.3 LTS or later
 
-# Declarations
+# Declarations ##################################################
 set -u
 
 # Colors
@@ -41,6 +42,7 @@ confirm_and_run() {
   esac
 }
 
+# Main Script ##################################################
 main () {
   printf "\n${bold}Welcome to the OEM quick setup!${cl}"
   printf "\n${bold}v1.1 - 09-07-2025"
@@ -49,90 +51,154 @@ main () {
   ##################
   # Initialization #
   ##################
-  printf "\n"
-  printf "${green}${bold}Various Background Tasks...${cl}\n"
-  sudo apt-get update # Update Package List
-
-
-  # Install curl if not already installed
-  if command -v curl &> /dev/null; then
-      echo "cURL is installed. Skipping installation of cURL."
+  read -p "Are you sure you ready to proceed? (yes/no): " response
+  if [[ "$response" == [yY][eE][sS]|[yY] ]]; then
+      echo "Proceeding..."
   else
-      sudo apt install curl
+      echo "Setup canceled."
   fi
+
+  # Update Package List
+  printf "\n"
+  printf "${green}${bold}Updating Package List...${cl}\n"
+  sudo apt-get update
+
+  # Create Directory with Temp files: ~/Downloads/oem-quick-setup-temp
+  printf "\n"
+  printf "${green}${bold}Create Temporary Files Directory (if not present)...${cl}\n"
+  TMP_DIR=~/Downloads/oem-quick-setup-temp
+  mkdir -p $TMP_DIR
+  cd $TMP_DIR
+  printf "Temporary Files Directory: ${blue}${bold}$TMP_DIR${cl}\n"
+
+  # Read Previous Script State (Handles Shell Restarts)
+  printf "\n"
+  printf "${green}${bold}Read Previous Script State...${cl}\n"
+  # Save the state to a temporary file
+  STATE_FILE="$TMP_DIR/script_state.txt"
+
+  # Check if the state file exists
+  if [[ -f "$STATE_FILE" ]]; then
+      # Read the state
+      STATE=$(cat "$STATE_FILE")
+  else
+      # Initialize the state
+      STATE="Start"
+  fi
+  printf "Current State: ${blue}${bold}$STATE${cl}\n"
   
-  # Directory with Temp files: ~/Downloads/oem-quick-setup-temp
-  mkdir -p ~/Downloads/oem-quick-setup-temp
-  cd ~/Downloads/oem-quick-setup-temp
+  # Determine action based on state
+  case "$STATE" in
+    "Start")
+        # Install cURL if not already installed
+          if command -v curl &> /dev/null; then
+              echo "cURL is installed. Skipping installation of cURL."
+          else
+              sudo apt install curl
+          fi
+        
+        # Install Miniconda
+        printf "\n${green}${bold}Installing Miniconda...${cl}\n"
+        confirm_and_run "curl -L https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh > $TMP_DIR/miniconda.sh && \
+        chmod -v +x $TMP_DIR/miniconda.sh && \
+        cd $TMP_DIR && \
+        ./miniconda.sh"
+
+        printf "\n${green}${bold}Restarting Shell to Apply Changes...${cl}\n"
+        echo "Step 2" > "$STATE_FILE"  # Save the next state
+        exec $SHELL  # Restart the shell
+        ;;
+    "Step 2")
+        # Create OEM Conda Environment
+        printf "\n${green}${bold}Creating OEM Conda Environment...${cl}\n"
+        confirm_and_run "conda create -n oem python=3.10 -y"
+        confirm_and_run "conda activate oem"
+
+        # Setting OEM Conda Environment to Auto-Activate on Shell Start
+        printf "\n${green}${bold}Setting OEM Conda Environment to Auto-Activate on Shell Start...${cl}\n"
+        conda config --set auto_activate_base false
+        echo "conda activate oem" >> ~/.bashrc
+        source ~/.bashrc
+
+        printf "\n${green}${bold}Restarting Shell to Apply Changes...${cl}\n"
+        echo "Restarts Done" > "$STATE_FILE"  # Save the next state
+        exec $SHELL  # Restart the shell
+        ;;
+    "Restarts Done")
+        # Install Python packages for OEM work
+        printf "\n"
+        printf "${green}${bold}TODO: Installing Python packages for OEM work...${cl}\n"
+        # TODO: Create OEM conda environment with all necessary packages for OEM work
+        # Change so packages are installed in OEM environment in conda
+
+        # Install Non-Python packages for OEM work
+        printf "\n${green}${bold}Installing Non-Python packages for OEM work...${cl}"
+        confirm_and_run "pip3 install cantools && \
+        sudo apt install can-utils"
+        sudo apt-get update # Update Package List
+
+        #######
+        # GIT #
+        #######
+        # https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
+        printf "\n"
+        printf "${green}${bold}Installing Git (latest stable version)...${cl}\n"
+        confirm_and_run "sudo apt install git-all"
+        eval "git --version"
+
+        #########
+        # Bazel #
+        #########
+        # https://bazel.build/install/ubuntu
+        printf "\n"
+        printf "${green}${bold}TODO: Installing Bazel (latest stable version)...${cl}\n"
+        # TODO: IMPLEMENT THIS
+
+        #########
+        # KICAD #
+        #########
+        # https://www.kicad.org/download/linux/
+        printf "\n"
+        printf "${green}${bold}Installing KiCad (latest stable version)...${cl}\n"
+        confirm_and_run "sudo add-apt-repository ppa:kicad/kicad-9.0-releases && \
+        sudo apt update && \
+        sudo apt install kicad"
+
+        ###########
+        # VS CODE #
+        ###########
+        # Installed using Ubuntu's snap package manager
+        printf "\n"
+        printf "${green}${bold}Installing VS Code (latest stable version)...${cl}\n"
+        confirm_and_run "sudo snap install --classic code"
+
+        ################################
+        # TOOLCHAIN - ATmega 16M1/64M1 #
+        ################################
+        printf "\n"
+        printf "\n${green}${bold}Installing buildchain (for ATmega 16M1/64M1)...${cl}\n"
+        confirm_and_run "sudo apt-get install build-essential manpages-dev gcc avr-gcc avrdude"
+
+        #########################################
+        # TOOLCHAIN - STM32G441KBT6/STM32G474RE #
+        #########################################
+        printf "\n"
+        printf "\n${green}${bold}TODO: Installing buildchain (for STM32G441KBT6/STM32G474RE)...${cl}\n"
+        # TODO: IMPLEMENT THIS
+
+        ########
+        # ZOOM #
+        ########
+        printf "\n"
+        printf "\n${green}${bold}Installing Zoom...${cl}\n"
+        confirm_and_run "curl -L https://zoom.us/client/latest/zoom_amd64.deb > ~/Downloads/oem-quick-setup-temp/zoom_amd64.deb && \
+        sudo dpkg -i ~/Downloads/oem-quick-setup-temp/zoom_amd64.deb"
+        ;;
+  esac
 
   # Install Python and pip, miniconda and other python libraries
   # confirm_and_run "sudo apt install python3 python3-pip python3-distutils"
-  confirm_and_run "curl -L https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh > ~/Downloads/oem-quick-setup-temp/miniconda.sh && \
-  chmod -v +x ~/Downloads/oem-quick-setup-temp/miniconda.sh && \
-  cd ~/Downloads/oem-quick-setup-temp && \
-  ./miniconda.sh"
-  cd ~/Downloads/oem-quick-setup-temp
-  printf "\n${green}${bold}Creating Conda oem environment...${cl}"
-
-  conda create -n oem python=3.10 -y
   # eval "$(/home/$USER/miniconda3/bin/conda shell.bash hook)"
-  confirm_and_run "conda activate oem"
-
-  # TODO: Create OEM conda environment with all necessary packages for OEM work
-  printf "\n${green}${bold}Installing Python packages for OEM work...${cl}"
-  # Change so packages are installed in OEM environment in conda
-
-  # Install non-python packages for OEM work
-  printf "\n${green}${bold}Installing non-Python packages for OEM work...${cl}"
-  confirm_and_run "pip3 install cantools && \
-  sudo apt install can-utils"
-  sudo apt-get update # Update Package List
-
-  #######
-  # GIT #
-  #######
-  # https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
-  printf "\n"
-  printf "${green}${bold}Installing Git (latest stable version)...${cl}\n"
-  confirm_and_run "sudo apt install git-all"
-  eval "git --version"
-
-  #########
-  # Bazel #
-  #########
-
-  #########
-  # KICAD #
-  #########
-  # https://www.kicad.org/download/linux/
-  printf "\n"
-  printf "${green}${bold}Installing KiCad (latest stable version)...${cl}\n"
-  confirm_and_run "sudo add-apt-repository ppa:kicad/kicad-9.0-releases && \
-  sudo apt update && \
-  sudo apt install kicad"
-
-  ###########
-  # VS CODE #
-  ###########
-  # Installed using Ubuntu's snap package manager
-  printf "\n"
-  printf "${green}${bold}Installing VS Code (latest stable version)...${cl}\n"
-  confirm_and_run "sudo snap install --classic code"
-
-  ################################
-  # TOOLCHAIN - ATmega 16M1/64M1 #
-  ################################
-  printf "\n"
-  printf "\n${green}${bold}Installing buildchain (for ATmega 16M1/64M1)...${cl}\n"
-  confirm_and_run "sudo apt-get install build-essential manpages-dev gcc avr-gcc avrdude"
-
-  ########
-  # ZOOM #
-  ########
-  printf "\n"
-  printf "\n${green}${bold}Installing Zoom...${cl}\n"
-  confirm_and_run "curl -L https://zoom.us/client/latest/zoom_amd64.deb > ~/Downloads/oem-quick-setup-temp/zoom_amd64.deb && \
-  sudo dpkg -i ~/Downloads/oem-quick-setup-temp/zoom_amd64.deb"
 
 # FINAL MESSAGE
 cat << EOF
