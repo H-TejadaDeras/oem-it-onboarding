@@ -105,7 +105,7 @@ main () {
           fi
         
         # Install Miniconda
-        printf "\n${green}${bold}Installing Miniconda...${cl}\n"
+        printf "\n${green}${bold}Installing Miniconda... Please accept all default settings!${cl}\n"
         confirm_and_run "curl -L https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh > $TMP_DIR/miniconda.sh && \
         chmod -v +x $TMP_DIR/miniconda.sh && \
         cd $TMP_DIR && \
@@ -226,7 +226,6 @@ main () {
         libxcb-keysyms1 libxcb-xtest0 ibus"
         confirm_and_run "curl -L https://zoom.us/client/latest/zoom_amd64.deb > ~/Downloads/oem-quick-setup-temp/zoom_amd64.deb && \
         sudo dpkg -i ~/Downloads/oem-quick-setup-temp/zoom_amd64.deb"
-        ;;
     
         ############
         # CLEAN UP #
@@ -235,6 +234,7 @@ main () {
         printf "\n"
         printf "${green}${bold}Cleaning Up Temporary Files...${cl}\n"
         rm -rf $TMP_DIR
+        ;;
   esac
 
 # FINAL MESSAGE
