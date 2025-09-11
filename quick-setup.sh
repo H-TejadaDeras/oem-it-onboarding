@@ -218,28 +218,29 @@ main () {
         ########
         # ZOOM #
         ########
+        # https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0063458
         printf "\n"
         printf "\n${green}${bold}Installing Zoom...${cl}\n"
+        confirm_and_run "sudo apt-get install libglib2.0-0 libgstreamer-plugins-base0.10-0 libxcb-shape0 libxcb-shm0 libxcb-xfixes0 libxcb-randr0 \
+        libxcb-image0 libfontconfig1 libgl1-mesa-glx libxi6 libsm6 libxrender1 libpulse0 libxcomposite1 libxslt1.1 libsqlite3-0 \
+        libxcb-keysyms1 libxcb-xtest0 ibus"
         confirm_and_run "curl -L https://zoom.us/client/latest/zoom_amd64.deb > ~/Downloads/oem-quick-setup-temp/zoom_amd64.deb && \
         sudo dpkg -i ~/Downloads/oem-quick-setup-temp/zoom_amd64.deb"
         ;;
+    
+        ############
+        # CLEAN UP #
+        ############
+        # Remove Temporary Files Directory
+        printf "\n"
+        printf "${green}${bold}Cleaning Up Temporary Files...${cl}\n"
+        rm -rf $TMP_DIR
   esac
-
-  # Install Python and pip, miniconda and other python libraries
-  # confirm_and_run "sudo apt install python3 python3-pip python3-distutils"
-  # eval "$(/home/$USER/miniconda3/bin/conda shell.bash hook)"
 
 # FINAL MESSAGE
 cat << EOF
-Your environment should now be setup. Here are a few things you may want to do now:
-
-  ******************************************************************
-  *** https://github.com/OlinElectricMotorSports/AdvancedResearch ***
-  ******************************************************************
-
-* ${bold}Fork the Advanced Research GitHub repository ^^^${cl} (create your own copy of it on GitHub)
-* ${bold}Clone your forked repository: ${cl}${green}git clone https://github.com/<YOUR_GITHUB_USERNAME>/AdvancedElectrical.git${cl}
-    * This copies the repository (all the code and files) to your computer
+Congratulations! Your environment should now be setup. Please verify that the following commands work:
+  - [Add Bazel Commands Here]
 
 EOF
 
