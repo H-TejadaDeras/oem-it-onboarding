@@ -46,7 +46,7 @@ confirm_and_run() {
 main () {
   printf "\n${bold}Welcome to the OEM quick setup!${cl}"
   printf "\n${bold}v1.1 - 09-07-2025"
-  # TODO: Bazel, Setup Virtual Environment, KiCad Defaults
+  # TODO: Bazel, KiCad Defaults
 
   # Get Script File Directory
   SCRIPT_PATH=$(readlink -f "$0")
@@ -111,11 +111,9 @@ main () {
         cd $TMP_DIR && \
         ./miniconda.sh"
 
-        # printf "\n${green}${bold}Restarting Shell to Apply Changes...${cl}\n"
         echo "Step 2" > "$STATE_FILE"  # Save the next state
         printf "\n${green}${bold}Please restart your shell to apply changes and then re-run the script.${cl}\n"
         exit 0
-        # exec $SHELL $SCRIPT_PATH # Restart the shell and restart script
         ;;
     "Step 2")
         # Accept Conda TOS
@@ -147,23 +145,20 @@ main () {
         echo "conda activate oem" >> ~/.bashrc
         source ~/.bashrc
 
-        # printf "\n${green}${bold}Restarting Shell to Apply Changes...${cl}\n"
         echo "Restarts Done" > "$STATE_FILE"  # Save the next state
         printf "\n${green}${bold}Please restart your shell to apply changes and then re-run the script.${cl}\n"
         exit 0
-        # exec $SHELL $SCRIPT_PATH # Restart the shell and restart script
         ;;
     "Restarts Done")
         # Install Python packages for OEM work
         printf "\n"
         printf "${green}${bold}TODO: Installing Python packages for OEM work...${cl}\n"
-        # TODO: Create OEM conda environment with all necessary packages for OEM work
-        # Change so packages are installed in OEM environment in conda
+        conda install pip -y
+        confirm_and_run "pip3 install cantools"
 
         # Install Non-Python packages for OEM work
         printf "\n${green}${bold}Installing Non-Python packages for OEM work...${cl}"
-        confirm_and_run "pip3 install cantools && \
-        sudo apt install can-utils"
+        sudo apt install can-utils
         sudo apt-get update # Update Package List
 
         #######
@@ -188,7 +183,7 @@ main () {
         #########
         # https://www.kicad.org/download/linux/
         printf "\n"
-        printf "${green}${bold}Installing KiCad (latest stable version)...${cl}\n"
+        printf "${green}${bold}Installing KiCad (v9.0)...${cl}\n"
         confirm_and_run "sudo add-apt-repository ppa:kicad/kicad-9.0-releases && \
         sudo apt update && \
         sudo apt install kicad"
