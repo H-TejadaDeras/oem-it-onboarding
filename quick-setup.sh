@@ -176,6 +176,14 @@ main () {
         # https://bazel.build/install/ubuntu
         printf "\n"
         printf "${green}${bold}TODO: Installing Bazel (latest stable version)...${cl}\n"
+        # Get Bazelisk
+        curl -L https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64 > $TMP_DIR/bazelisk
+        chmod +x $TMP_DIR/bazelisk
+        sudo mv $TMP_DIR/bazelisk /usr/local/bin/bazel
+        # Verify Installation
+        bazel version
+        # Install Bazel using Bazelisk
+        # printf "\n${green}${bold}TODO: Installing Bazel (latest stable version)...${cl}\n"
         # TODO: IMPLEMENT THIS
 
         #########
@@ -219,7 +227,7 @@ main () {
         confirm_and_run "sudo apt-get install libglib2.0-0 libgstreamer-plugins-base0.10-0 libxcb-shape0 libxcb-shm0 libxcb-xfixes0 libxcb-randr0 \
         libxcb-image0 libfontconfig1 libgl1-mesa-glx libxi6 libsm6 libxrender1 libpulse0 libxcomposite1 libxslt1.1 libsqlite3-0 \
         libxcb-keysyms1 libxcb-xtest0 ibus"
-        confirm_and_run "curl -L https://zoom.us/client/latest/zoom_amd64.deb > ~/Downloads/oem-quick-setup-temp/zoom_amd64.deb && \
+        confirm_and_run "curl -L https://zoom.us/client/latest/zoom_amd64.deb > $TMP_DIR/zoom_amd64.deb && \
         sudo dpkg -i ~/Downloads/oem-quick-setup-temp/zoom_amd64.deb"
     
         ############
