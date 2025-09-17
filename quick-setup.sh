@@ -182,9 +182,6 @@ main () {
         sudo mv $TMP_DIR/bazelisk /usr/local/bin/bazel
         # Verify Installation
         bazel version
-        # Install Bazel using Bazelisk
-        # printf "\n${green}${bold}TODO: Installing Bazel (latest stable version)...${cl}\n"
-        # TODO: IMPLEMENT THIS
 
         #########
         # KICAD #
