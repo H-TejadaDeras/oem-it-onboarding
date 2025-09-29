@@ -227,6 +227,13 @@ main () {
         confirm_and_run "curl -L https://zoom.us/client/latest/zoom_amd64.deb > $TMP_DIR/zoom_amd64.deb && \
         sudo dpkg -i ~/Downloads/oem-quick-setup-temp/zoom_amd64.deb"
     
+        ########################
+        # MISC. UBUNTU CONFIG. #
+        ########################
+        printf "\n"
+        printf "\n${green}${bold}Correcting Time Differences Between Windows and Ubuntu...${cl}\n"
+        confirm_and_run "sudo timedatectl set-local-rtc 1"
+        
         ############
         # CLEAN UP #
         ############
