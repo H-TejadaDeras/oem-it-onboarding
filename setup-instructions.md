@@ -13,12 +13,18 @@ important steps for collaborating with teammates.
 Instructions Information:
 - Made for Dell Pro Max 16 (2025)
 - Installs Ubuntu 24.04.3 LTS
-- Updated as of 09-15-2025
+- Updated as of 09-29-2025
 
 ## Computer Setup
 ### Windows Tasks + Pre-Ubuntu Installation Tasks
 1) Disable BitLocker
-2) Shrink Windows Partition by ~48 GB
+
+	> Go to your Windows Search Bar and search for `BitLocker`. Select your C: drive and decrypt your drive. Ubuntu cannot get installed if your drive is encrypted!
+
+2) Shrink Windows Partition by ~64 GB
+
+	> Open a Windows Run Window by pressing `Win (Windows Key) + R`. Type in the search bar `diskmgmt.msc`.
+
 3) Reboot your computer and enter the UEFI (BIOS) by spam pressing F12 on your keyboard when your computer starts up.
 4) Navigate to BIOS/UEFI Settings
 5) Disable Secure Boot
@@ -27,8 +33,74 @@ Instructions Information:
 1) Get Ubuntu Install USB Flash Drive (or make your own; download the ISO from here: [https://releases.ubuntu.com/24.04.3/ubuntu-24.04.3-desktop-amd64.iso](https://releases.ubuntu.com/24.04.3/ubuntu-24.04.3-desktop-amd64.iso))
 2) Turn on your computer again and pam pressing F12 on your keyboard when your computer starts up.
 3) On the boot menu screen, select the USB flash disk option (has the USB logo to the left).
-4) Go through the menus for installing Ubuntu 24.04.3 LTS.
+4) Go through the menus for installing Ubuntu 24.04.3 LTS. Leave the default options selected. **Make sure you are selecting "Install Ubuntu along side Windows Boot Manager".** You don't want to overwrite Windows (unless you do, you do you)! When asked if you want to install 3rd party drivers, select yes.
+
+### Pre-Installation Tasks
+1) **Install cURL**
+
+	This tool will be used later on to download packages during the onboarding process.
+
+	```bash
+	sudo apt install curl
+	```
+
+2) **Update Ubuntu Packages List**
+
+	This is so the system knows what is installed and will help prevent headaches down the road.
+
+	```bash
+	sudo apt-get update
+	```
+
 ### Python 3 + Miniconda Virtual Environment
+1) **Download and Install Miniconda**
+
+	Just run the following commands to install Miniconda. The commands download the installer script from the Anaconda website to `~/Downloads/miniconda.sh`, make the script executable, and execute the script.
+
+	```bash
+	curl -L https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh > ~/Downloads/miniconda.sh && 
+	chmod -v +x ~/Downloads/miniconda.sh && 
+	cd ~/Downloads && 
+	./miniconda.sh
+	```
+
+2) **Restart your terminal**
+	
+	Close and open your terminal window again. You should see that `(base)` appears to the left of your username. If you do not see that, restart your shell again and/or restart your computer.
+
+3) **Accept Conda Terms of Service (TOS)**
+
+	Accept Conda's TOS. You need to accept the TOS to download packages to create your virtual environment later.
+
+	Anaconda Terms of Service: https://www.anaconda.com/legal/terms/terms-of-service
+    Anaconda Privacy Policy: https://www.anaconda.com/legal/privacy-policy
+
+	```bash
+	conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
+	conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
+	```
+
+4) **Create the OEM Conda Environment**
+
+	This creates your Conda virtual environment from which all the OEM associated python libraries will be. We will use Python version 3.10 to ensure all the libraries work as expected with Bazel (which will be installed later).
+
+	```bash
+	conda create -n oem python=3.10 -y
+	```
+
+5) **Set OEM Conda Environment to Auto-Activate on Terminal Start**
+
+	description
+
+	```bash
+	conda config --set auto_activate_base false
+	echo "conda activate oem" >> ~/.bashrc
+	```
+
+6) **Restart your terminal again**
+
+	Close and open your terminal window again. You should see that `(oem)` appears to the left of your username. If you do not see that, restart your shell again and/or restart your computer.
+
 ### Git
 ### OEM Environment
 ### Bazel
