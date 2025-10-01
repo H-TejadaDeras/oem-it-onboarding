@@ -215,6 +215,14 @@ main () {
         printf "\n${green}${bold}TODO: Installing buildchain (for STM32G441KBT6/STM32G474RE)...${cl}\n"
         # TODO: IMPLEMENT THIS
 
+        #########
+        # SLACK #
+        #########
+        # Installed using Ubuntu's snap package manager
+        printf "\n"
+        printf "${green}${bold}Installing Slack (latest stable version)...${cl}\n"
+        confirm_and_run "sudo snap install slack"
+
         ########
         # ZOOM #
         ########
@@ -233,7 +241,7 @@ main () {
         printf "\n"
         printf "\n${green}${bold}Correcting Time Differences Between Windows and Ubuntu...${cl}\n"
         confirm_and_run "sudo timedatectl set-local-rtc 1"
-        
+    
         ############
         # CLEAN UP #
         ############
