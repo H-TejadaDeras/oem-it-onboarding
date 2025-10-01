@@ -1,7 +1,7 @@
 <h1 align="center">
 	<img
 		alt="Olin Electric Motorsports"
-		src="https://nyc3.digitaloceanspaces.com/oem-outline/logo-smaller.png">
+		src="images\oem_logo.png">
 </h1>
 
 Welcome to the Olin Electric Motorsports monorepo. This is the home for all of our
@@ -19,15 +19,49 @@ Instructions Information:
 ### Windows Tasks + Pre-Ubuntu Installation Tasks
 1) Disable BitLocker
 
-	> Go to your Windows Search Bar and search for `BitLocker`. Select your C: drive and decrypt your drive. Ubuntu cannot get installed if your drive is encrypted!
+	Go to your Windows Search Bar and search for `BitLocker`. Select your C: drive and decrypt your drive (red box). Ubuntu cannot get installed if your drive is encrypted!
+
+	<h3 align="center">
+		<img
+			alt="Deactivate BitLocker Window"
+			src="images/deactivate_bitlocker.png">
+	</h3>
 
 2) Shrink Windows Partition by ~64 GB
 
-	> Open a Windows Run Window by pressing `Win (Windows Key) + R`. Type in the search bar `diskmgmt.msc`.
+	Open a Windows Run Window by pressing `Win (Windows Key) + R`. Type in the search bar `diskmgmt.msc`. Right click C: drive and select shrink drive option.
+
+	<h3 align="center">
+		<img
+			alt="Disk Management Window"
+			src="images/diskmgmt.png">
+	</h3>
+	
+	Type in 64000 for "Amount of space to shrink in MB" (red box) and click "Shrink".
+
+	<h3 align="center">
+		<img
+			alt="Shrink C Drive Options"
+			src="images/shrink_c_drive.png">
+	</h3>
 
 3) Reboot your computer and enter the UEFI (BIOS) by spam pressing F12 on your keyboard when your computer starts up.
-4) Navigate to BIOS/UEFI Settings
-5) Disable Secure Boot
+4) Navigate to BIOS/UEFI Settings (red box)
+
+	<h3 align="center">
+		<img
+			alt="Boot Menu"
+			src="images/boot_menu.png">
+	</h3>
+
+5) Disable Secure Boot. First toggle "Advanded Setup" options (yelloow box). Next select the "Boot Configuration" tab (orange box) and scroll down to the "Secure Boot" section.
+
+	<h3 align="center">
+		<img
+			alt="Disable Secure Boot"
+			src="images/disable_secure_boot.png">
+	</h3>
+
 6) Apply your changes and reboot your computer.
 ### Ubuntu 24.04.3 LTS
 1) Get Ubuntu Install USB Flash Drive (or make your own; download the ISO from here: [https://releases.ubuntu.com/24.04.3/ubuntu-24.04.3-desktop-amd64.iso](https://releases.ubuntu.com/24.04.3/ubuntu-24.04.3-desktop-amd64.iso))
@@ -72,8 +106,8 @@ Instructions Information:
 
 	Accept Conda's TOS. You need to accept the TOS to download packages to create your virtual environment later.
 
-	Anaconda Terms of Service: https://www.anaconda.com/legal/terms/terms-of-service
-    Anaconda Privacy Policy: https://www.anaconda.com/legal/privacy-policy
+	- Anaconda Terms of Service: https://www.anaconda.com/legal/terms/terms-of-service
+    - Anaconda Privacy Policy: https://www.anaconda.com/legal/privacy-policy
 
 	```bash
 	conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
@@ -116,6 +150,7 @@ curl -L https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk
 chmod +x ~/Downloads/bazelisk
 sudo mv ~/Downloads/bazelisk /usr/local/bin/bazel
 ```
+
 ### KiCad 9.0
 These commands install KiCad version 9.0. We use KiCad to create schematics and design our PCBs.
 
@@ -145,7 +180,44 @@ All of these packages are used to flash firmware onto the boards with STM32G441K
 ```bash
 ```
 
+### Slack
+Slack is our main form of communication in OEM. This command will download the desktop version of Slack to your computer.
+
+```bash
+sudo snap install slack
+```
+
 ### Other Packages
 1) **Cantools**
+
+	*Make sure you are on the oem conda virtual environment for this step. If `(oem)` appears to the left of your username, you are good!*
+
+	This library is used to help us read CAN messages from the car.
+
+	```bash
+	pip3 install cantools
+	```
+
 2) **can-utils**
+
+	This library allows us to interact with the CAN bus via a CANable.
+
+	```bash
+	sudo apt install can-utils
+	```
+
+### Miscellaneous Ubuntu Configuration
+1) **Windows + Ubuntu Time Differences Fix**
+
+	This command will correct time differences between Windows and Ubuntu. It will fix time offset issues when you switch between the operating systems. This is optional.
+
+	```bash
+	sudo timedatectl set-local-rtc 1
+	```
+
+2) **Remove Temporary Files**
+
+	You can now safely delete any files that were created during the setup process. These files can include `miniconda.sh` among others.
+ 
 ## Software Setup
+###
