@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # OEM IT Onboarding Quick Setup Script
-# v1.1 - 09-12-2025
+# v1.2 - TBD
 # 
 # Authors:
 # - Jack Greenberg - 09-24-2022
@@ -45,8 +45,7 @@ confirm_and_run() {
 # Main Script ##################################################
 main () {
   printf "\n${bold}Welcome to the OEM quick setup!${cl}"
-  printf "\n${bold}v1.1 - 09-07-2025"
-  # TODO: Bazel, KiCad Defaults
+  printf "\n${bold}v1.2 - 10-07-2025"
 
   # Get Script File Directory
   SCRIPT_PATH=$(readlink -f "$0")
@@ -152,7 +151,7 @@ main () {
     "Restarts Done")
         # Install Python packages for OEM work
         printf "\n"
-        printf "${green}${bold}TODO: Installing Python packages for OEM work...${cl}\n"
+        printf "${green}${bold}Installing Python packages for OEM work...${cl}\n"
         conda install pip -y
         confirm_and_run "pip3 install cantools"
 
@@ -175,7 +174,7 @@ main () {
         #########
         # https://bazel.build/install/ubuntu
         printf "\n"
-        printf "${green}${bold}TODO: Installing Bazel (latest stable version)...${cl}\n"
+        printf "${green}${bold}Installing Bazel (latest stable version)...${cl}\n"
         # Get Bazelisk
         curl -L https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64 > $TMP_DIR/bazelisk
         chmod +x $TMP_DIR/bazelisk
@@ -206,13 +205,13 @@ main () {
         ################################
         printf "\n"
         printf "\n${green}${bold}Installing buildchain (for ATmega 16M1/64M1)...${cl}\n"
-        confirm_and_run "sudo apt-get install build-essential manpages-dev gcc avr-gcc avrdude"
+        confirm_and_run "sudo apt install gcc-avr avrdude avr-libc binutils-avr gdb-avr"
 
         #########################################
         # TOOLCHAIN - STM32G441KBT6/STM32G474RE #
         #########################################
         printf "\n"
-        printf "\n${green}${bold}TODO: Installing buildchain (for STM32G441KBT6/STM32G474RE)...${cl}\n"
+        printf "\n${green}${bold}TODO: Installing buildchain (for STM32G441KB/STM32G474RE)...${cl}\n"
         # TODO: IMPLEMENT THIS
 
         #########
@@ -223,18 +222,6 @@ main () {
         printf "${green}${bold}Installing Slack (latest stable version)...${cl}\n"
         confirm_and_run "sudo snap install slack"
 
-        ########
-        # ZOOM #
-        ########
-        # https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0063458
-        printf "\n"
-        printf "\n${green}${bold}Installing Zoom...${cl}\n"
-        confirm_and_run "sudo apt-get install libglib2.0-0 libgstreamer-plugins-base0.10-0 libxcb-shape0 libxcb-shm0 libxcb-xfixes0 libxcb-randr0 \
-        libxcb-image0 libfontconfig1 libgl1-mesa-glx libxi6 libsm6 libxrender1 libpulse0 libxcomposite1 libxslt1.1 libsqlite3-0 \
-        libxcb-keysyms1 libxcb-xtest0 ibus"
-        confirm_and_run "curl -L https://zoom.us/client/latest/zoom_amd64.deb > $TMP_DIR/zoom_amd64.deb && \
-        sudo dpkg -i ~/Downloads/oem-quick-setup-temp/zoom_amd64.deb"
-    
         ########################
         # MISC. UBUNTU CONFIG. #
         ########################

@@ -13,7 +13,7 @@ important steps for collaborating with teammates.
 Instructions Information:
 - Made for Dell Pro Max 16 (2025)
 - Installs Ubuntu 24.04.3 LTS
-- Updated as of 09-29-2025
+- Updated as of 09-30-2025
 
 ## Computer Setup
 ### Windows Tasks + Pre-Ubuntu Installation Tasks
@@ -90,7 +90,7 @@ Instructions Information:
 
 5) **Set OEM Conda Environment to Auto-Activate on Terminal Start**
 
-	description
+	This is so you are working with the OEM environment by default. This will help prevent headaches in the future by preventing situations in which you are in the wrong environment and that causes weird issues.
 
 	```bash
 	conda config --set auto_activate_base false
@@ -102,8 +102,50 @@ Instructions Information:
 	Close and open your terminal window again. You should see that `(oem)` appears to the left of your username. If you do not see that, restart your shell again and/or restart your computer.
 
 ### Git
-### OEM Environment
+This command installs Git. We use Git to keep track of changes and store all our OEM files to be accessed by team members in the future.
+
+```bash
+sudo apt install git-all
+```
+
 ### Bazel
+These commands install Bazelisk which is a wrapper for Bazel. Bazel itself is a tool that we use for various things like compiling code and flashing firmware to a board. Bazelisk will automatically install the appropriate version of Bazel that you need.
+
+```bash
+curl -L https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64 > ~/Downloads/bazelisk
+chmod +x ~/Downloads/bazelisk
+sudo mv ~/Downloads/bazelisk /usr/local/bin/bazel
+```
 ### KiCad 9.0
+These commands install KiCad version 9.0. We use KiCad to create schematics and design our PCBs.
+
+```bash
+sudo add-apt-repository ppa:kicad/kicad-9.0-releases &&
+sudo apt update &&
+sudo apt install kicad
+```
+
 ### VS Code
-### Toolchain Things (AVR + Arm)
+This command installs VS Code. We use VS Code to write our firmware in!
+
+```bash
+sudo snap install --classic code
+```
+
+### Toolchain (AVR - ATmega 16M1/64M1)
+All of these packages are used to flash firmware onto the boards with ATmega 16M1 or 64M1 microcontrollers. Generally all boards prior to Mk. VIII (Design Year 2025-26) were all used this microcontroller. **You only need to install these packages if you are interacting with a board with an ATmega microcontroller.**
+
+```bash
+sudo apt install gcc-avr avrdude avr-libc binutils-avr gdb-avr
+```
+
+### Toolchain (ARM - STM32G441KB/STM32G474RE)
+All of these packages are used to flash firmware onto the boards with STM32G441KB or STM32G474RE microcontrollers. All boards made for Mk. VIII (Design Year 2025-26) and after used this microcontroller.
+
+```bash
+```
+
+### Other Packages
+1) **Cantools**
+2) **can-utils**
+## Software Setup
