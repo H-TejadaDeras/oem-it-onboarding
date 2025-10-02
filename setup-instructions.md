@@ -220,4 +220,43 @@ sudo snap install slack
 	You can now safely delete any files that were created during the setup process. These files can include `miniconda.sh` among others.
  
 ## Software Setup
-###
+### Git + GitHub
+We need to connect your GitHub account to your computer's specific git instance (which we installed previously). We do this for safety: someone pretending to be you can't add code to our repo!
+
+1) **Set Your GitHub Username**
+
+	Replace `['your username here']` with your username.
+
+	```bash
+	git config --global user.name '[your username here]'
+	```
+
+2) **Set Your Email Address**
+
+	This is your email that you used to create your GitHub account. Replace `[your email here]`.
+
+	```bash
+	git config --global user.email '[your email here]'
+	```
+
+3) **Create an SSH Key**
+	
+	An SSH Key is essentially a super crazy long password. When you’re prompted to "Enter a file in which to save the key," press `Enter`. This accepts the default file location. At the password prompt, hit `Enter` again (you do not need to set a password for SSH Key).
+
+	```bash
+	ssh-keygen -t ed25519 -C '[your email here]'
+	```
+
+4) **Add Your SSH Key in GitHub**
+
+	In your github page, go to your profile (Top Right) > `Settings` > `SSH and GPG Keys`. Click on the green `New SSH Key` button. Title your key as `Olin Computer` (or something else that means something to you) and paste in your SSH key. Finally, click the green `Add SSH Key` button.
+
+5) **Test Connection to GitHub**
+	
+	Test your ssh connection by using the command below. Type `yes` when prompted. You've done this step correctly if you see something along the lines of `Hi "username"! You've successfully authenticated, but GitHub does not provide shell access.`
+
+	```bash
+	ssh -T git@github.com
+	```
+
+### KiCad
