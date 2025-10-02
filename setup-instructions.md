@@ -208,6 +208,8 @@ sudo snap install slack
 
 3) **Click**
 
+	*Make sure you are on the oem conda virtual environment for this step. If `(oem)` appears to the left of your username, you are good!*
+		
 	Allows us to convert symbols to library and so on... desc
 
 	```bash
@@ -230,6 +232,9 @@ sudo snap install slack
 ## Software Setup
 ### Git + GitHub
 We need to connect your GitHub account to your computer's specific git instance (which we installed previously). We do this for safety: someone pretending to be you can't add code to our repo!
+
+Before continuing, make sure you have a GitHub account. If you don't, create one on [GitHub](github.com) (this website). Make sure to save your username, email, and password. This will be useful in the next steps. Once you have an account, STOP, and ask a lead/senior engineer to add you to the `olin-electric-motorsports` org.
+
 
 1) **Set Your GitHub Username**
 
@@ -259,6 +264,12 @@ We need to connect your GitHub account to your computer's specific git instance 
 
 	In your github page, go to your profile (Top Right) > `Settings` > `SSH and GPG Keys`. Click on the green `New SSH Key` button. Title your key as `Olin Computer` (or something else that means something to you) and paste in your SSH key. Finally, click the green `Add SSH Key` button.
 
+	Run the command below to get the SSH key to copy to the GitHub website.
+	
+	```bash
+	cat ~/.ssh/id_ed25519.pub
+	```
+
 5) **Test Connection to GitHub**
 	
 	Test your ssh connection by using the command below. Type `yes` when prompted. You've done this step correctly if you see something along the lines of `Hi "username"! You've successfully authenticated, but GitHub does not provide shell access.`
@@ -267,4 +278,55 @@ We need to connect your GitHub account to your computer's specific git instance 
 	ssh -T git@github.com
 	```
 
+6) **Clone the olin-electric-motorsports GitHub Repo**
+
+	First navigate to the folder in which you would like to clone the OEM repo to; most people prefer to clone the repo to their `~\Documents` folder. Afterwards, run the following command to clone the repo.
+
+	```bash
+	git@github.com:olin-electric-motorsports/olin-electric-motorsports.git
+	```
+
 ### KiCad
+We need to setup your KiCad installation with certain settings to make sure you have access to our schematic symbols, 3D models, and footprints.
+
+*Note: In the paths below, `[your-username]` is to be replaced with your username on your computer.*
+
+*Note: The paths below assume you cloned the `olin-electric-motorsports` directory to your `/home/[your-username]/Documents` folder. If you did not clone the `olin-electric-motorsports` directory to your `/home/[your-username]/Documents` folder, you will need to change the `/home/[your-username]/Documents` part of the paths to match where you cloned the `olin-electric-motorsports` directory.*
+
+1) **Open KiCad**
+
+	To open KiCad, you can press `Win (Windows Key)` and type `KiCad`. Click on the blue app (always do this when opening Kicad, otherwise you can corrupt files!). Hit `Enter` if asked about settings imports and auto-updates for add-ons.
+
+2) **Add Paths**
+
+	This path will be used as a shortcut for paths we will enter later.
+	
+	From the top bar, open *Preferences > Configure Paths...*. Add a new row to the table using the plus button (you will have to fill out TWO fields... shown below) and then click `ok`.
+
+	Name | Path
+	-----|-----
+	OEM\_DIR|`/home/[your-username]/Documents/olin-electric-motorsports`
+
+
+3) **Add OEM Schematic Symbols Library**
+
+	From the top bar, open _Preferences > Manage Symbol Libraries ..._. Same deal as before with the new line at the bottom, new values though this time:
+
+	Name | Path
+	-----|-----
+	OEM |`${OEM_DIR}/parts/schematic/OEM.kicad_sym`
+
+4) **Add OEM Footprints Library**
+
+	From the top bar, open *Preferences > Manage Footprint Libraries ...*.
+	3rd time's the magic one, plus button, add the values in the table below and then click `ok`.
+
+	Name | Path
+	-----|-----
+	OEM |`${OEM_DIR}/parts/oem.pretty`
+5) **Add OEM Project Template**
+
+
+	```bash	
+	cp -R ~/Documents/olin-electric-motorsports/projects/oem_project_template ~/.local/share/kicad/9.0/template
+	```
