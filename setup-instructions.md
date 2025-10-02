@@ -206,6 +206,14 @@ sudo snap install slack
 	sudo apt install can-utils
 	```
 
+3) **Click**
+
+	Allows us to convert symbols to library and so on... desc
+
+	```bash
+	pip3 install click
+	```
+
 ### Miscellaneous Ubuntu Configuration
 1) **Windows + Ubuntu Time Differences Fix**
 

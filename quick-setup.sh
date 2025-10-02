@@ -153,7 +153,7 @@ main () {
         printf "\n"
         printf "${green}${bold}Installing Python packages for OEM work...${cl}\n"
         conda install pip -y
-        confirm_and_run "pip3 install cantools"
+        confirm_and_run "pip3 install cantools click"
 
         # Install Non-Python packages for OEM work
         printf "\n${green}${bold}Installing Non-Python packages for OEM work...${cl}"
