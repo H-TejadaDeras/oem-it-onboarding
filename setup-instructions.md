@@ -265,7 +265,7 @@ Before continuing, make sure you have a GitHub account. If you don't, create one
 	In your github page, go to your profile (Top Right) > `Settings` > `SSH and GPG Keys`. Click on the green `New SSH Key` button. Title your key as `Olin Computer` (or something else that means something to you) and paste in your SSH key. Finally, click the green `Add SSH Key` button.
 
 	Run the command below to get the SSH key to copy to the GitHub website.
-	
+
 	```bash
 	cat ~/.ssh/id_ed25519.pub
 	```
@@ -283,7 +283,7 @@ Before continuing, make sure you have a GitHub account. If you don't, create one
 	First navigate to the folder in which you would like to clone the OEM repo to; most people prefer to clone the repo to their `~\Documents` folder. Afterwards, run the following command to clone the repo.
 
 	```bash
-	git@github.com:olin-electric-motorsports/olin-electric-motorsports.git
+	git clone git@github.com:olin-electric-motorsports/olin-electric-motorsports.git
 	```
 
 ### KiCad
@@ -306,6 +306,7 @@ We need to setup your KiCad installation with certain settings to make sure you 
 	Name | Path
 	-----|-----
 	OEM\_DIR|`/home/[your-username]/Documents/olin-electric-motorsports`
+	OEM_
 
 
 3) **Add OEM Schematic Symbols Library**
