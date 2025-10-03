@@ -13,7 +13,7 @@ important steps for collaborating with teammates.
 Instructions Information:
 - Made for Dell Pro Max 16 (2025)
 - Installs Ubuntu 24.04.3 LTS
-- Updated as of 09-30-2025
+- Updated as of 10-02-2025
 
 ## Computer Setup
 ### Windows Tasks + Pre-Ubuntu Installation Tasks
@@ -297,7 +297,7 @@ We need to setup your KiCad installation with certain settings to make sure you 
 
 	To open KiCad, you can press `Win (Windows Key)` and type `KiCad`. Click on the blue app (always do this when opening Kicad, otherwise you can corrupt files!). Hit `Enter` if asked about settings imports and auto-updates for add-ons.
 
-2) **Add Paths**
+2) **Add OEM_DIR Path**
 
 	This path will be used as a shortcut for paths we will enter later.
 	
@@ -306,7 +306,6 @@ We need to setup your KiCad installation with certain settings to make sure you 
 	Name | Path
 	-----|-----
 	OEM\_DIR|`/home/[your-username]/Documents/olin-electric-motorsports`
-	OEM_
 
 
 3) **Add OEM Schematic Symbols Library**
@@ -319,14 +318,15 @@ We need to setup your KiCad installation with certain settings to make sure you 
 
 4) **Add OEM Footprints Library**
 
-	From the top bar, open *Preferences > Manage Footprint Libraries ...*.
-	3rd time's the magic one, plus button, add the values in the table below and then click `ok`.
+	From the top bar, open *Preferences > Manage Footprint Libraries ...*. 3rd time's the magic one, plus button, add the values in the table below and then click `ok`.
 
 	Name | Path
 	-----|-----
 	OEM |`${OEM_DIR}/parts/oem.pretty`
+
 5) **Add OEM Project Template**
 
+	Finally, let's add the OEM Project Template to your KiCad installation. We will use this template to hold our schematics and our pcb trace settings.
 
 	```bash	
 	cp -R ~/Documents/olin-electric-motorsports/projects/oem_project_template ~/.local/share/kicad/9.0/template
