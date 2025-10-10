@@ -206,7 +206,7 @@ sudo snap install slack
 	sudo apt install can-utils
 	```
 
-3) **Click**
+3) **KiCad Symbols Library Specific Packages**
 
 	*Make sure you are on the oem conda virtual environment for this step. If `(oem)` appears to the left of your username, you are good!*
 		
@@ -214,6 +214,32 @@ sudo snap install slack
 
 	```bash
 	pip3 install click
+	```
+
+4) **build-essential**
+
+	This meta-package allows us to compile C code for various programs.
+
+	```bash
+	sudo apt install build-essential
+	```
+
+5) **PyYAML**
+
+	*Make sure you are on the oem conda virtual environment for this step. If `(oem)` appears to the left of your username, you are good!*
+	
+	Allows us to read yaml files in scripts.
+
+	```bash
+	pip install pyyaml
+	```
+
+6) **Canviewer Specific Packages**
+
+	*Make sure you are on the oem conda virtual environment for this step. If `(oem)` appears to the left of your username, you are good!*
+
+	```bash
+	pip3 install PyQt5, numpy
 	```
 
 ### Miscellaneous Ubuntu Configuration
