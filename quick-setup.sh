@@ -45,7 +45,7 @@ confirm_and_run() {
 # Main Script ##################################################
 main () {
   printf "\n${bold}Welcome to the OEM quick setup!${cl}"
-  printf "\n${bold}v1.2 - 10-07-2025"
+  printf "\n${bold}v1.3 - 10-12-2025"
 
   # Get Script File Directory
   SCRIPT_PATH=$(readlink -f "$0")
@@ -105,38 +105,56 @@ main () {
         
         # Install Miniconda
         printf "\n${green}${bold}Installing Miniconda... Please accept all default settings!${cl}\n"
-        confirm_and_run "curl -L https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh > $TMP_DIR/miniconda.sh && \
-        chmod -v +x $TMP_DIR/miniconda.sh && \
-        cd $TMP_DIR && \
-        ./miniconda.sh"
+        if command -v conda &> /dev/null; then # Check if Miniconda is already installed
+            echo "Miniconda is already installed. Skipping installation of Miniconda."
+        else
+            confirm_and_run "curl -L https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh > $TMP_DIR/miniconda.sh && \
+            chmod -v +x $TMP_DIR/miniconda.sh && \
+            cd $TMP_DIR && \
+            ./miniconda.sh"
+        fi
 
         echo "Step 2" > "$STATE_FILE"  # Save the next state
         printf "\n${green}${bold}Please restart your shell to apply changes and then re-run the script.${cl}\n"
         exit 0
         ;;
     "Step 2")
+        # Check if conda command is available
+        if ! command -v conda &> /dev/null; then
+            printf "\n${red}${bold}Conda command not found. Please ensure Miniconda is installed and restart your shell before re-running the script.${cl}\n"
+            exit 1
+        fi
+
         # Accept Conda TOS
         printf "\n${green}${bold}Accepting Conda TOS...${cl}\n"
-        printf "Anaconda Terms of Service: https://www.anaconda.com/legal/terms/terms-of-service\n"
-        printf "Anaconda Privacy Policy: https://www.anaconda.com/legal/privacy-policy\n"
-        printf "You must accept the Terms of Service to proceed. By inputting "y", you are accepting the terms of service.\n"
-        printf "\n"
-        read -p "Do you accept Anaconda's Terms of Service? (Y/n): " response
-        if [[ "$response" == [yY] ]]; then
-            echo "You accepted Anaconda's Terms of Service. Continuing setup."
-            conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
-            conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
-        elif [[ "$response" == [nN] ]]; then
-            echo "You did not accept the Terms of Service. Exiting setup."
-            exit 0
+        if conda tos status --override-channels --channel https://repo.anaconda.com/pkgs/main | grep -q "You have accepted the Terms of Service" && conda tos status --override-channels --channel https://repo.anaconda.com/pkgs/r | grep -q "You have accepted the Terms of Service"; then # Check if Conda TOS is already accepted
+            echo "Conda Terms of Service already accepted. Skipping acceptance of Conda TOS."
         else
-            echo "Invalid input. Exiting setup."
-            exit 0
+            printf "Anaconda Terms of Service: https://www.anaconda.com/legal/terms/terms-of-service\n"
+            printf "Anaconda Privacy Policy: https://www.anaconda.com/legal/privacy-policy\n"
+            printf "You must accept the Terms of Service to proceed. By inputting "y", you are accepting the terms of service.\n"
+            printf "\n"
+            read -p "Do you accept Anaconda's Terms of Service? (Y/n): " response
+            if [[ "$response" == [yY] ]]; then
+                echo "You accepted Anaconda's Terms of Service. Continuing setup."
+                conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
+                conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
+            elif [[ "$response" == [nN] ]]; then
+                echo "You did not accept the Terms of Service. Exiting setup."
+                exit 0
+            else
+                echo "Invalid input. Exiting setup."
+                exit 0
+            fi
         fi
 
         # Create OEM Conda Environment
         printf "\n${green}${bold}Creating OEM Conda Environment...${cl}\n"
-        confirm_and_run "conda create -n oem python=3.10 -y"
+        if conda env list | grep -q "^oem\s"; then # Check if the "oem" environment already exists
+            echo "Conda environment 'oem' already exists. Skipping creation of 'oem' environment."
+        else
+            confirm_and_run "conda create -n oem python=3.10 -y"
+        fi
 
         # Setting OEM Conda Environment to Auto-Activate on Shell Start
         printf "\n${green}${bold}Setting OEM Conda Environment to Auto-Activate on Shell Start...${cl}\n"
@@ -149,15 +167,24 @@ main () {
         exit 0
         ;;
     "Restarts Done")
+        # Check if 'oem' environment is active
+        if [[ "$(basename "$CONDA_DEFAULT_ENV")" != "oem" ]]; then
+            printf "\n${red}${bold}The 'oem' Conda environment is not active. Please restart your shell and ensure the 'oem' environment is activated before re-running the script.${cl}\n"
+            exit 1
+        fi
         # Install Python packages for OEM work
         printf "\n"
         printf "${green}${bold}Installing Python packages for OEM work...${cl}\n"
-        conda install pip -y
-        confirm_and_run "pip3 install cantools click"
+        if python -m pip --version &> /dev/null; then # Check if pip is installed in the 'oem' environment
+            echo "pip is already installed in the 'oem' environment. Skipping installation of pip."
+        else
+            conda install pip -y
+        fi
+        confirm_and_run "pip3 install cantools click pyyaml PyQt5 numpy"
 
         # Install Non-Python packages for OEM work
         printf "\n${green}${bold}Installing Non-Python packages for OEM work...${cl}"
-        sudo apt install can-utils
+        confirm_and_run "sudo apt install can-utils build-essential"
         sudo apt-get update # Update Package List
 
         #######
@@ -166,8 +193,12 @@ main () {
         # https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
         printf "\n"
         printf "${green}${bold}Installing Git (latest stable version)...${cl}\n"
-        confirm_and_run "sudo apt install git-all"
-        eval "git --version"
+        if command -v git &> /dev/null; then # Check if Git is already installed
+            echo "Git is already installed. Skipping installation of Git."
+        else
+            confirm_and_run "sudo apt install git-all"
+        fi
+        eval "git --version" # Verify Installation
 
         #########
         # Bazel #
@@ -175,12 +206,16 @@ main () {
         # https://bazel.build/install/ubuntu
         printf "\n"
         printf "${green}${bold}Installing Bazel (latest stable version)...${cl}\n"
-        # Get Bazelisk
-        curl -L https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64 > $TMP_DIR/bazelisk
-        chmod +x $TMP_DIR/bazelisk
-        sudo mv $TMP_DIR/bazelisk /usr/local/bin/bazel
-        # Verify Installation
-        bazel version
+        # Check if Bazel is already installed
+        if command -v bazel &> /dev/null; then
+            echo "Bazel is already installed. Skipping installation of Bazel."
+        else
+            # Get Bazelisk
+            curl -L https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64 > $TMP_DIR/bazelisk
+            chmod +x $TMP_DIR/bazelisk
+            sudo mv $TMP_DIR/bazelisk /usr/local/bin/bazel
+        fi
+        eval "bazel version" # Verify Installation
 
         #########
         # KICAD #
@@ -188,9 +223,15 @@ main () {
         # https://www.kicad.org/download/linux/
         printf "\n"
         printf "${green}${bold}Installing KiCad (v9.0)...${cl}\n"
-        confirm_and_run "sudo add-apt-repository ppa:kicad/kicad-9.0-releases && \
-        sudo apt update && \
-        sudo apt install kicad"
+        # Check if KiCad is already installed
+        if command -v kicad &> /dev/null; then
+            echo "KiCad is already installed. Skipping installation of KiCad."
+        else
+            confirm_and_run "sudo add-apt-repository ppa:kicad/kicad-9.0-releases && \
+            sudo apt update && \
+            sudo apt install kicad"
+        fi
+        eval "kicad --version" # Verify Installation
 
         ###########
         # VS CODE #
@@ -198,7 +239,11 @@ main () {
         # Installed using Ubuntu's snap package manager
         printf "\n"
         printf "${green}${bold}Installing VS Code (latest stable version)...${cl}\n"
-        confirm_and_run "sudo snap install --classic code"
+        if command -v code &> /dev/null; then # Check if VS Code is already installed
+            echo "VS Code is already installed. Skipping installation of VS Code."
+        else
+            confirm_and_run "sudo snap install --classic code"
+        fi
 
         ################################
         # TOOLCHAIN - ATmega 16M1/64M1 #
@@ -220,7 +265,11 @@ main () {
         # Installed using Ubuntu's snap package manager
         printf "\n"
         printf "${green}${bold}Installing Slack (latest stable version)...${cl}\n"
-        confirm_and_run "sudo snap install slack"
+        if command -v slack &> /dev/null; then # Check if Slack is already installed
+            echo "Slack is already installed. Skipping installation of Slack."
+        else
+          confirm_and_run "sudo snap install slack"
+        fi
 
         ########################
         # MISC. UBUNTU CONFIG. #
