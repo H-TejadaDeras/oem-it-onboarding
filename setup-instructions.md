@@ -239,7 +239,7 @@ sudo snap install slack
 	*Make sure you are on the oem conda virtual environment for this step. If `(oem)` appears to the left of your username, you are good!*
 
 	```bash
-	pip3 install PyQt5, numpy
+	pip3 install PyQt5 numpy
 	```
 
 ### Miscellaneous Ubuntu Configuration
