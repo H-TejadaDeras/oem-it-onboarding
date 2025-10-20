@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # OEM IT Onboarding Quick Setup Script
-# v1.2 - TBD
+# v1.3 - 10-20-2025
 # 
 # Authors:
 # - Jack Greenberg - 09-24-2022
@@ -45,7 +45,7 @@ confirm_and_run() {
 # Main Script ##################################################
 main () {
   printf "\n${bold}Welcome to the OEM quick setup!${cl}"
-  printf "\n${bold}v1.3 - 10-12-2025"
+  printf "\n${bold}v1.3 - 10-20-2025"
 
   # Get Script File Directory
   SCRIPT_PATH=$(readlink -f "$0")
@@ -121,31 +121,27 @@ main () {
     "Step 2")
         # Check if conda command is available
         if ! command -v conda &> /dev/null; then
-            printf "\n${red}${bold}Conda command not found. Please ensure Miniconda is installed and restart your shell before re-running the script.${cl}\n"
+            printf "\n${red}${bold}Error: Conda command not found. Please ensure Miniconda is installed and restart your shell before re-running the script.${cl}\n"
             exit 1
         fi
 
         # Accept Conda TOS
         printf "\n${green}${bold}Accepting Conda TOS...${cl}\n"
-        if conda tos status --override-channels --channel https://repo.anaconda.com/pkgs/main | grep -q "You have accepted the Terms of Service" && conda tos status --override-channels --channel https://repo.anaconda.com/pkgs/r | grep -q "You have accepted the Terms of Service"; then # Check if Conda TOS is already accepted
-            echo "Conda Terms of Service already accepted. Skipping acceptance of Conda TOS."
+        printf "Anaconda Terms of Service: https://www.anaconda.com/legal/terms/terms-of-service\n"
+        printf "Anaconda Privacy Policy: https://www.anaconda.com/legal/privacy-policy\n"
+        printf "You must accept the Terms of Service to proceed. By inputting "y", you are accepting the terms of service.\n"
+        printf "\n"
+        read -p "Do you accept Anaconda's Terms of Service? (Y/n): " response
+        if [[ "$response" == [yY] ]]; then
+            echo "You accepted Anaconda's Terms of Service. Continuing setup."
+            conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
+            conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
+        elif [[ "$response" == [nN] ]]; then
+            echo "You did not accept the Terms of Service. Exiting setup."
+            exit 0
         else
-            printf "Anaconda Terms of Service: https://www.anaconda.com/legal/terms/terms-of-service\n"
-            printf "Anaconda Privacy Policy: https://www.anaconda.com/legal/privacy-policy\n"
-            printf "You must accept the Terms of Service to proceed. By inputting "y", you are accepting the terms of service.\n"
-            printf "\n"
-            read -p "Do you accept Anaconda's Terms of Service? (Y/n): " response
-            if [[ "$response" == [yY] ]]; then
-                echo "You accepted Anaconda's Terms of Service. Continuing setup."
-                conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
-                conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
-            elif [[ "$response" == [nN] ]]; then
-                echo "You did not accept the Terms of Service. Exiting setup."
-                exit 0
-            else
-                echo "Invalid input. Exiting setup."
-                exit 0
-            fi
+            echo "Invalid input. Exiting setup."
+            exit 0
         fi
 
         # Create OEM Conda Environment
@@ -169,7 +165,7 @@ main () {
     "Restarts Done")
         # Check if 'oem' environment is active
         if [[ "$(basename "$CONDA_DEFAULT_ENV")" != "oem" ]]; then
-            printf "\n${red}${bold}The 'oem' Conda environment is not active. Please restart your shell and ensure the 'oem' environment is activated before re-running the script.${cl}\n"
+            printf "\n${red}${bold}Error: The 'oem' Conda environment is not active. Please restart your shell and ensure the 'oem' environment is activated before re-running the script.${cl}\n"
             exit 1
         fi
         # Install Python packages for OEM work
@@ -183,8 +179,8 @@ main () {
         confirm_and_run "pip3 install cantools click pyyaml PyQt5 numpy"
 
         # Install Non-Python packages for OEM work
-        printf "\n${green}${bold}Installing Non-Python packages for OEM work...${cl}"
-        confirm_and_run "sudo apt install can-utils build-essential"
+        printf "\n${green}${bold}Installing Non-Python packages for OEM work...${cl}\n"
+        confirm_and_run "sudo apt install can-utils build-essential libxcb-xinerama0"
         sudo apt-get update # Update Package List
 
         #######
@@ -231,7 +227,6 @@ main () {
             sudo apt update && \
             sudo apt install kicad"
         fi
-        eval "kicad --version" # Verify Installation
 
         ###########
         # VS CODE #

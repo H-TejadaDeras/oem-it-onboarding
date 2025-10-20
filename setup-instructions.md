@@ -234,12 +234,13 @@ sudo snap install slack
 	pip install pyyaml
 	```
 
-6) **Canviewer Specific Packages**
+6) **CAN Viewer Specific Packages**
 
 	*Make sure you are on the oem conda virtual environment for this step. If `(oem)` appears to the left of your username, you are good!*
 
 	```bash
 	pip3 install PyQt5 numpy
+	sudo apt install libxcb-xinerama0
 	```
 
 ### Miscellaneous Ubuntu Configuration
