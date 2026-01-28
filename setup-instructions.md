@@ -174,10 +174,11 @@ All of these packages are used to flash firmware onto the boards with ATmega 16M
 sudo apt install gcc-avr avrdude avr-libc binutils-avr gdb-avr
 ```
 
-### Toolchain (ARM - STM32G441KB/STM32G474RE)
+### Toolchain (ARM - STM32G441KB/STM32G441CB/STM32G474RE)
 All of these packages are used to flash firmware onto the boards with STM32G441KB or STM32G474RE microcontrollers. All boards made for Mk. VIII (Design Year 2025-26) and after used this microcontroller.
 
 ```bash
+sudo apt install openocd
 ```
 
 ### Slack
@@ -307,10 +308,18 @@ Before continuing, make sure you have a GitHub account. If you don't, create one
 
 6) **Clone the olin-electric-motorsports GitHub Repo**
 
-	First navigate to the folder in which you would like to clone the OEM repo to; most people prefer to clone the repo to their `~\Documents` folder. Afterwards, run the following command to clone the repo.
+	First navigate to the folder in which you would like to clone the OEM repo to; most people prefer to clone the repo to their `~\Documents` folder. Afterwards, run the following command to clone the repo. Generally all boards prior to Mk. VIII (Design Year 2025-26) were all used this microcontroller. **You only need to clone this repo if you are interacting with a board with an ATmega microcontroller or with a PCB made prior to Mk. VIII.**
 
 	```bash
 	git clone git@github.com:olin-electric-motorsports/olin-electric-motorsports.git
+	```
+
+7) **Clone the oem-monorepo GitHub Repo**
+
+	First navigate to the folder in which you would like to clone the OEM repo to; most people prefer to clone the repo to their `~\Documents` folder. Afterwards, run the following command to clone the repo. All boards made for Mk. VIII (Design Year 2025-26) and after used this microcontroller.
+
+	```bash
+	git clone git@github.com:olin-electric-motorsports/oem-monorepo.git
 	```
 
 ### KiCad
