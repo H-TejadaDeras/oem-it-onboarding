@@ -176,6 +176,7 @@ sudo apt install gcc-avr avrdude avr-libc binutils-avr gdb-avr
 
 ### Toolchain (ARM - STM32G441KB/STM32G441CB/STM32G474RE)
 All of these packages are used to flash firmware onto the boards with STM32G441KB or STM32G474RE microcontrollers. All boards made for Mk. VIII (Design Year 2025-26) and after used this microcontroller.
+<!-- arm-none-eabi-gcc -->
 
 ```bash
 sudo apt install openocd

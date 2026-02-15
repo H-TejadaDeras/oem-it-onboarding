@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # OEM IT Onboarding Quick Setup Script
-# v1.3 - 10-20-2025
+# v2.0 - 01-28-2026
 # 
 # Authors:
 # - Jack Greenberg - 09-24-2022
@@ -10,6 +10,11 @@
 #
 # Assumptions:
 # - Ubuntu 24.04.3 LTS or later
+# 
+# CLI Arguments:
+# <script path> [help] - Displays CLI Arguments Help
+# <script path> [-silent] - Runs all commands without user prompts (except for Conda TOS and sudo); installs both ARM and AVR toolchains and associated setups
+# <script path> [-arm/-avr]
 
 # Declarations ##################################################
 set -u
@@ -42,10 +47,34 @@ confirm_and_run() {
   esac
 }
 
+cli_help() {
+    printf "
+    Usage: quick-setup.sh [ARGUMENTS] [OPTIONS]...
+
+    OEM IT Onboarding Quick Setup Script.
+
+    Arguments:
+    help                Show this message and exit.
+    <toolchain>         Selects which toolchain and associated setup to install.
+                        Options: arm avr both
+
+    Options:
+    --silent            Runs all commands without user prompts (except for Conda TOS and sudo)
+    
+    "
+    exit 1
+    ;;
+}
+
 # Main Script ##################################################
 main () {
+  # Handle Command Line Arguments
+  if [[ "$@" == [help]]]; then
+    cli_help()
+  fi
+
   printf "\n${bold}Welcome to the OEM quick setup!${cl}"
-  printf "\n${bold}v1.3 - 10-20-2025"
+  printf "\n${bold}v2.0 - 01-28-2026"
 
   # Get Script File Directory
   SCRIPT_PATH=$(readlink -f "$0")
@@ -247,12 +276,12 @@ main () {
         printf "\n${green}${bold}Installing buildchain (for ATmega 16M1/64M1)...${cl}\n"
         confirm_and_run "sudo apt install gcc-avr avrdude avr-libc binutils-avr gdb-avr"
 
-        #########################################
-        # TOOLCHAIN - STM32G441KBT6/STM32G474RE #
-        #########################################
+        ###################################################
+        # TOOLCHAIN - STM32G441KB/STM32G441CB/STM32G474RE #
+        ###################################################
         printf "\n"
-        printf "\n${green}${bold}TODO: Installing buildchain (for STM32G441KB/STM32G474RE)...${cl}\n"
-        # TODO: IMPLEMENT THIS
+        printf "\n${green}${bold}TODO: Installing buildchain (for STM32G441KB/STM32G441CB/STM32G474RE)...${cl}\n"
+        confirm_and_run "sudo apt install openocd"
 
         #########
         # SLACK #
