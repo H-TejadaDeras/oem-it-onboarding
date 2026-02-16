@@ -138,8 +138,12 @@ main () {
             ;;
     esac
 
+    printf "\n${bold}Welcome to the OEM quick setup!${cl}"
+    printf "\n${bold}$VERSION${cl}\n"
+
     # Read Previous Script State (Handles Shell Restarts)
     if [ -d "$TMP_DIR" ]; then # Check if the temporary directory already exists
+        printf "\n${bold}Note: Resuming from previous state, this overrides your command line arguments.${cl}\n"
         # Check if the state file exists
         if [[ -f "$STATE_FILE" ]]; then
             # Read the state
@@ -177,9 +181,6 @@ main () {
     echo "$STATE" > "$STATE_FILE"
     echo "$SILENT_MODE" > "$SILENT_MODE_FLAG"
     echo "$TOOLCHAIN" > "$TOOLCHAIN_SELECTION"
-
-    printf "\n${bold}Welcome to the OEM quick setup!${cl}"
-    printf "\n${bold}$VERSION${cl}\n"
 
     # Get Script File Directory
     SCRIPT_PATH=$(readlink -f "$0")
