@@ -151,6 +151,8 @@ main () {
     else
         # Initialize the state and silent mode flag and Create Directory with Temp files: ~/Downloads/oem-quick-setup-temp
         STATE="Start"
+        SILENT_MODE=false
+        TOOLCHAIN="both"
         mkdir -p $TMP_DIR
         cd $TMP_DIR
         echo "$STATE" > "$STATE_FILE"
