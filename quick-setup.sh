@@ -83,26 +83,52 @@ cli_help() {
 # Main Script ##################################################
 main () {
     # Handle Command Line Arguments
-    if [[ "$1" == "help" ]]; then
+    if [ $# -gt 2 ]; then
+        echo "Error: Too many arguments."
         cli_help
     fi
 
-    if [[ "$1" == "--silent" || "$2" == "--silent" ]]; then
-        # In silent mode, we can set a variable to skip prompts in the confirm_and_run function
-        SILENT_MODE=true
-    else
-        SILENT_MODE=false
-    fi
+    case $# in
+        0)
+            # No arguments provided, proceed with default settings
+            ;;
+        1)
+            if [[ "$1" == "help" ]]; then
+                cli_help
+            elif [[ "$1" == "--silent" ]]; then
+                SILENT_MODE=true
+            elif [[ "$1" == "arm" ]]; then
+                TOOLCHAIN="arm"
+            elif [[ "$1" == "avr" ]]; then
+                TOOLCHAIN="avr"
+            elif [[ "$1" == "both" ]]; then
+                TOOLCHAIN="both"
+            else
+                echo "Error: Invalid argument."
+                cli_help
+            fi
+            ;;
+        2)
+            if [[ "$1" == "help" || "$2" == "help" ]]; then
+                cli_help
+            fi
 
-    if [[ "$1" == "arm" ]]; then
-        TOOLCHAIN="arm"
-    elif [[ "$1" == "avr" ]]; then
-        TOOLCHAIN="avr"
-    elif [[ "$1" == "both" ]]; then
-        TOOLCHAIN="both"
-    else
-        TOOLCHAIN="both"
-    fi
+            if [[ "$2" == "--silent" ]]; then
+                SILENT_MODE=true
+            fi
+
+            if [[ "$1" == "arm" ]]; then
+                TOOLCHAIN="arm"
+            elif [[ "$1" == "avr" ]]; then
+                TOOLCHAIN="avr"
+            elif [[ "$1" == "both" ]]; then
+                TOOLCHAIN="both"
+            else
+                echo "Error: Invalid argument combination. One of the arguments must specify the toolchain (arm/avr/both)."
+                cli_help
+            fi
+            ;;
+    esac
 
     # Read Previous Script State (Handles Shell Restarts)
     if [ -d "$TMP_DIR" ]; then # Check if the temporary directory already exists
