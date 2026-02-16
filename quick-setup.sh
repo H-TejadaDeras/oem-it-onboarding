@@ -46,6 +46,7 @@ confirm_and_run() {
     cmd=$1
     if [[ "$SILENT_MODE" == true ]]; then
         printf "\n${green}Running: ${blue}${bold}$cmd${cl}\n"
+        eval $cmd
     else
         read -p "${white}Run ${green}${cmd}${white}? [y/n] " -n 1 -r resp
         printf "\n"
@@ -218,7 +219,7 @@ main () {
                 if command -v curl &> /dev/null; then
                     echo "cURL is installed. Skipping installation of cURL."
                 else
-                    sudo apt install curl
+                    sudo apt install curl -y
                 fi
 
             # Install Miniconda
@@ -298,7 +299,7 @@ main () {
 
             # Install Non-Python packages for OEM work
             printf "\n${green}${bold}Installing Non-Python packages for OEM work...${cl}\n"
-            confirm_and_run "sudo apt install can-utils build-essential libxcb-xinerama0"
+            confirm_and_run "sudo apt install can-utils build-essential libxcb-xinerama0 -y"
             sudo apt-get update # Update Package List
 
             #######
@@ -310,7 +311,7 @@ main () {
             if command -v git &> /dev/null; then # Check if Git is already installed
                 echo "Git is already installed. Skipping installation of Git."
             else
-                confirm_and_run "sudo apt install git-all"
+                confirm_and_run "sudo apt install git-all -y"
             fi
             eval "git --version" # Verify Installation
 
@@ -341,9 +342,9 @@ main () {
             if command -v kicad &> /dev/null; then
                 echo "KiCad is already installed. Skipping installation of KiCad."
             else
-                confirm_and_run "sudo add-apt-repository ppa:kicad/kicad-9.0-releases && \
+                confirm_and_run "sudo add-apt-repository --yes ppa:kicad/kicad-9.0-releases && \
                 sudo apt update && \
-                sudo apt install kicad"
+                sudo apt install kicad -y"
             fi
 
             ###########
@@ -364,7 +365,7 @@ main () {
             if [[ "$TOOLCHAIN" == "avr" || "$TOOLCHAIN" == "both" ]]; then
                 printf "\n"
                 printf "\n${green}${bold}Installing firmware related packages for ATmega 16M1/64M1...${cl}\n"
-                confirm_and_run "sudo apt install gcc-avr avrdude avr-libc binutils-avr gdb-avr"
+                confirm_and_run "sudo apt install gcc-avr avrdude avr-libc binutils-avr gdb-avr -y"
             fi
 
             ###################################################################
@@ -373,7 +374,7 @@ main () {
             if [[ "$TOOLCHAIN" == "arm" || "$TOOLCHAIN" == "both" ]]; then
                 printf "\n"
                 printf "\n${green}${bold}Installing firmware related packages for STM32G441KB/STM32G441CB/STM32G474RE...${cl}\n"
-                confirm_and_run "sudo apt install openocd"
+                confirm_and_run "sudo apt install openocd -y"
             fi
 
             #########
