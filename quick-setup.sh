@@ -35,6 +35,11 @@ SILENT_MODE_FLAG="$TMP_DIR/silent_mode_flag.txt"
 STATE_FILE="$TMP_DIR/script_state.txt"
 TOOLCHAIN_SELECTION="$TMP_DIR/toolchain_selection.txt"
 
+# Default Values
+SILENT_MODE=false
+STATE="Start"
+TOOLCHAIN="both"
+
 # Functions ####################################################
 
 confirm_and_run() {
@@ -148,6 +153,14 @@ main () {
         else
             SILENT_MODE=false
         fi
+
+        # Check if the toolchain selection file exists
+        if [[ -f "$TOOLCHAIN_SELECTION" ]]; then
+            # Read the toolchain selection
+            TOOLCHAIN=$(cat "$TOOLCHAIN_SELECTION")
+        else
+            TOOLCHAIN="both"
+        fi
     else
         # Initialize the state and silent mode flag and Create Directory with Temp files: ~/Downloads/oem-quick-setup-temp
         STATE="Start"
@@ -159,6 +172,11 @@ main () {
         echo "$SILENT_MODE" > "$SILENT_MODE_FLAG"
         echo "$TOOLCHAIN" > "$TOOLCHAIN_SELECTION"
     fi
+
+    # Save the current state, silent mode flag, and toolchain selection to their respective files
+    echo "$STATE" > "$STATE_FILE"
+    echo "$SILENT_MODE" > "$SILENT_MODE_FLAG"
+    echo "$TOOLCHAIN" > "$TOOLCHAIN_SELECTION"
 
     printf "\n${bold}Welcome to the OEM quick setup!${cl}"
     printf "\n${bold}$VERSION${cl}\n"
