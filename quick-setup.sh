@@ -68,19 +68,19 @@ confirm_and_run() {
 
 cli_help() {
     printf "
-    Usage: quick-setup.sh [ARGUMENTS] [OPTIONS]...
+Usage: quick-setup.sh [ARGUMENTS] [OPTIONS]...
 
-    OEM IT Onboarding Quick Setup Script.
-    ${VERSION}
+OEM IT Onboarding Quick Setup Script.
+${VERSION}
 
-    Arguments:
-    help                Show this message and exit.
-    <toolchain>         Selects which firmware related packages to install associated with its toolchain.
-                        Options: arm avr both
+Arguments:
+help                Show this message and exit.
+<toolchain>         Selects which firmware related packages to install associated with its toolchain.
+                    Options: arm avr both
 
-    Options:
-    --silent            Runs all commands without user prompts (except for Conda Setup, TOS, and sudo)
-    
+Options:
+--silent            Runs all commands without user prompts (except for Conda Setup, TOS, and sudo)
+
     "
     exit 1
 }
@@ -163,9 +163,6 @@ main () {
         fi
     else
         # Initialize the state and silent mode flag and Create Directory with Temp files: ~/Downloads/oem-quick-setup-temp
-        STATE="Start"
-        SILENT_MODE=false
-        TOOLCHAIN="both"
         mkdir -p $TMP_DIR
         cd $TMP_DIR
         echo "$STATE" > "$STATE_FILE"
@@ -413,10 +410,9 @@ cat << EOF
 Congratulations! Your environment should now be setup. Please verify that the following commands work:
 bazel version
 openocd --version
-bazel build //...
 
 EOF
 
 }
 
-main
+main "$@"
