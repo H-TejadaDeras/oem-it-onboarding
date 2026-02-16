@@ -78,28 +78,27 @@ cli_help() {
     
     "
     exit 1
-    ;;
 }
 
 # Main Script ##################################################
 main () {
     # Handle Command Line Arguments
-    if [[ "$@" == [help]]]; then
+    if [[ "$1" == "help" ]]; then
         cli_help
     fi
 
-    if(("$@" == [--silent])); then
+    if [[ "$1" == "--silent" || "$2" == "--silent" ]]; then
         # In silent mode, we can set a variable to skip prompts in the confirm_and_run function
         SILENT_MODE=true
     else
         SILENT_MODE=false
     fi
 
-    if [[ "$@" == [arm] ]]; then
+    if [[ "$1" == "arm" ]]; then
         TOOLCHAIN="arm"
-    elif [[ "$@" == [avr] ]]; then
+    elif [[ "$1" == "avr" ]]; then
         TOOLCHAIN="avr"
-    elif [[ "$@" == [both] ]]; then
+    elif [[ "$1" == "both" ]]; then
         TOOLCHAIN="both"
     else
         TOOLCHAIN="both"
