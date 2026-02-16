@@ -13,7 +13,7 @@ important steps for collaborating with teammates.
 Instructions Information:
 - Made for Dell Pro Max 16 (2025)
 - Installs Ubuntu 24.04.3 LTS
-- Updated as of 10-02-2025
+- Updated as of 02-16-2026
 
 ## Computer Setup
 ### Windows Tasks + Pre-Ubuntu Installation Tasks
@@ -167,16 +167,15 @@ This command installs VS Code. We use VS Code to write our firmware in!
 sudo snap install --classic code
 ```
 
-### Toolchain (AVR - ATmega 16M1/64M1)
+### Firmware-Related Packages (AVR - ATmega 16M1/64M1)
 All of these packages are used to flash firmware onto the boards with ATmega 16M1 or 64M1 microcontrollers. Generally all boards prior to Mk. VIII (Design Year 2025-26) were all used this microcontroller. **You only need to install these packages if you are interacting with a board with an ATmega microcontroller.**
 
 ```bash
 sudo apt install gcc-avr avrdude avr-libc binutils-avr gdb-avr
 ```
 
-### Toolchain (ARM - STM32G441KB/STM32G441CB/STM32G474RE)
+### Firmware-Related Packages (ARM - STM32G441KB/STM32G441CB/STM32G474RE)
 All of these packages are used to flash firmware onto the boards with STM32G441KB or STM32G474RE microcontrollers. All boards made for Mk. VIII (Design Year 2025-26) and after used this microcontroller.
-<!-- arm-none-eabi-gcc -->
 
 ```bash
 sudo apt install openocd
@@ -187,6 +186,13 @@ Slack is our main form of communication in OEM. This command will download the d
 
 ```bash
 sudo snap install slack
+```
+
+### Pip
+*Make sure you are on the oem conda virtual environment for this step. If `(oem)` appears to the left of your username, you are good!*
+This command installs Pip in the OEM Conda Environment. This will be used later in the setup process.
+```bash
+conda install pip -y
 ```
 
 ### Other Packages
