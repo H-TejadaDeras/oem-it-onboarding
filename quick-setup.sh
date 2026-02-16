@@ -14,8 +14,8 @@
 # 
 # CLI Arguments:
 # <script path> [help] - Displays CLI Arguments Help
-# <script path> [-silent] - Runs all commands without user prompts (except for Conda TOS and sudo); installs both ARM and AVR toolchains and associated setups
-# <script path> [-arm/-avr]
+# <script path> [arm/avr/both] - Selects which firmware related packages to install associated with its toolchain; can be used in conjunction with --silent
+# <script path> [--silent] - Runs all commands without user prompts (except for Conda TOS and sudo); installs both ARM and AVR toolchains and associated setups
 
 # Declarations #################################################
 set -u
@@ -28,9 +28,11 @@ white=$(printf '\033[97m')
 bold=$(printf '\033[1m')
 cl=$(printf '\033[0m')
 
+# Configuration Variables
 TMP_DIR=~/Downloads/oem-quick-setup-temp
 VERSION='v2.0 - 02-16-2026'
 
+# Temporary Files for State Management (used to keep state across shell restarts)
 SILENT_MODE_FLAG="$TMP_DIR/silent_mode_flag.txt"
 STATE_FILE="$TMP_DIR/script_state.txt"
 TOOLCHAIN_SELECTION="$TMP_DIR/toolchain_selection.txt"
@@ -406,12 +408,9 @@ main () {
             ;;
     esac
 
-# FINAL MESSAGE
+# End of Setup Script Message
 cat << EOF
-Congratulations! Your environment should now be setup. Please verify that the following commands work:
-bazel version
-openocd --version
-
+Congratulations! Your computer has now all the necessary packages and programs to work on most projects related to Olin Electric Motorsports! Next, you will need to set up your local Git and KiCad settings which is covered in the Software Setup section of the setup instructions.
 EOF
 
 }
