@@ -13,7 +13,7 @@ important steps for collaborating with teammates.
 Instructions Information:
 - Made for Dell Pro Max 16 (2025)
 - Installs Ubuntu 24.04.3 LTS
-- Updated as of 02-16-2026
+- Updated as of 03-17-2026
 
 ## Computer Setup
 ### Windows Tasks + Pre-Ubuntu Installation Tasks
@@ -178,7 +178,7 @@ sudo apt install gcc-avr avrdude avr-libc binutils-avr gdb-avr
 All of these packages are used to flash firmware onto the boards with STM32G441KB or STM32G474RE microcontrollers. All boards made for Mk. VIII (Design Year 2025-26) and after used this microcontroller.
 
 ```bash
-sudo apt install openocd
+sudo apt install gdb-multiarch openocd
 ```
 
 ### Slack
@@ -335,6 +335,8 @@ We need to setup your KiCad installation with certain settings to make sure you 
 *Note: In the paths below, `[your-username]` is to be replaced with your username on your computer.*
 
 *Note: The paths below assume you cloned the `olin-electric-motorsports` directory to your `/home/[your-username]/Documents` folder. If you did not clone the `olin-electric-motorsports` directory to your `/home/[your-username]/Documents` folder, you will need to change the `/home/[your-username]/Documents` part of the paths to match where you cloned the `olin-electric-motorsports` directory.*
+
+*Note: The paths below refer to the `olin-electric-motorsports` repository. Check with an E-Lead for the path in the 'oem-monorepo' repository.*
 
 1) **Open KiCad**
 

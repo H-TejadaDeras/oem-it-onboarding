@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # OEM IT Onboarding Quick Setup Script
-# v2.1 - 03-02-2026
+# v2.1 - 03-19-2026
 # 
 # Authors:
 # - Jack Greenberg - 09-24-2022
@@ -30,7 +30,7 @@ cl=$(printf '\033[0m')
 
 # Configuration Variables
 TMP_DIR=~/Downloads/oem-quick-setup-temp
-VERSION='v2.1 - 03-02-2026'
+VERSION='v2.1 - 03-19-2026'
 
 # Temporary Files for State Management (used to keep state across shell restarts)
 SILENT_MODE_FLAG="$TMP_DIR/silent_mode_flag.txt"
@@ -314,7 +314,7 @@ main () {
             if command -v git &> /dev/null; then # Check if Git is already installed
                 echo "Git is already installed. Skipping installation of Git."
             else
-                confirm_and_run "sudo apt install git-all git-lfs -y"
+                confirm_and_run "sudo apt install git-all -y"
             fi
             eval "git --version" # Verify Installation
 
