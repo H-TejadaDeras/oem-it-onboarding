@@ -336,7 +336,7 @@ We need to setup your KiCad installation with certain settings to make sure you 
 
 *Note: The paths below assume you cloned the `olin-electric-motorsports` directory to your `/home/[your-username]/Documents` folder. If you did not clone the `olin-electric-motorsports` directory to your `/home/[your-username]/Documents` folder, you will need to change the `/home/[your-username]/Documents` part of the paths to match where you cloned the `olin-electric-motorsports` directory.*
 
-*Note: The paths below refer to the `olin-electric-motorsports` repository. Check with an E-Lead for the path in the 'oem-monorepo' repository.*
+*Note: The paths below refer to the `olin-electric-motorsports` repository. Check with an E-Lead for the path in the `oem-monorepo` repository.*
 
 1) **Open KiCad**
 
